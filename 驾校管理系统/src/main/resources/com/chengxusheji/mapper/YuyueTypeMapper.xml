@@ -1,0 +1,81 @@
+﻿<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.YuyueTypeMapper">
+	<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象
+    mapper.xml以statement为单位管理sql语句
+     -->
+	<!-- 添加车牌号 -->
+	<insert id="addYuyueType" parameterType="yuyueType">
+		insert into t_yuyueType(typeName,coach,user_name,state,yuyue_day,yuyue_time) values
+		(#{typeName},#{coach},#{user_name},#{state},#{yuyue_day},#{yuyue_time})
+	</insert>
+
+	<!-- 按照查询条件分页查询车牌号类型记录 -->
+	<select id="queryYuyueType" resultMap="yuyueTypeMap" >
+    select t_yuyueType.* from t_yuyuetype ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="yuyueTypeMap" type="yuyueType">
+		<id property="typeId" column="typeId" />
+	</resultMap>
+	<!-- 按照查询条件分页查询考试记录 -->
+<!--	<select id="queryYuyueType02" resultMap="yuyueTypeMap" >
+		select t_yuyuetype.* from t_yuyuetype,t_userInfo ${where} and t_yuyuetype.user_name = t_userInfo.user_name limit #{startIndex},#{pageSize}
+	</select>-->
+	<select id="queryYuyueType02" resultMap="yuyueTypeMap" >
+		select t_yuyuetype.* from t_yuyuetype ${where}  limit #{startIndex},#{pageSize}
+	</select>
+<!--	<resultMap id="yuyuetypeMap" type="yuyuetype">
+		<id property="typeId" column="typeId" />
+		<association property="user_name" column="user_name" select="com.chengxusheji.mapper.UserInfoMapper.getUserInfo" />
+	</resultMap>-->
+	<!-- 按照查询条件查询所有考试记录 -->
+	<select id="queryYuyueTypeList02" resultMap="yuyueTypeMap" >
+		select t_yuyuetype.* from t_yuyuetype ${where}
+	</select>
+
+
+	<!-- 按照查询条件查询所有预约记录 -->
+	<select id="queryYuyueTypeList" resultMap="yuyueTypeMap" >
+		select t_yuyueType.* from t_yuyueType ${where}
+	</select>
+
+	<!-- 按照查询条件的缴费类型记录数 -->
+	<select id="queryYuyueTypeCount" resultType="int">
+		select count(*) from t_yuyueType ${where}
+	</select>
+	<!-- 按照查询条件的考试记录数 -->
+<!--	<select id="queryYuyueTypeCount02" resultType="int">
+		select count(*) from t_yuyueType,t_userInfo ${where} and t_yuyueType.user_name = t_userInfo.user_name
+	</select>-->
+	<select id="queryYuyueTypeCount02" resultType="int">
+		select count(*) from t_yuyueType ${where}
+	</select>
+
+	<!-- 根据主键查询某个缴费类型记录 -->
+	<select id="getYuyueType" parameterType="int" resultMap="yuyueTypeMap">
+		select * from t_yuyueType where t_yuyueType.typeId = #{typeId}
+	</select>
+
+	<!-- 更新缴费类型记录 -->
+	<update id="updateYuyueType" parameterType="yuyueType">
+		update t_yuyueType set typeName=#{typeName},coach=#{coach},user_name=#{user_name},state=#{state} where typeId = #{typeId}
+	</update>
+
+	<!-- 删除缴费类型记录 -->
+	<delete id="deleteYuyueType" parameterType="int">
+		delete from t_yuyueType where typeId=#{typeId}
+	</delete>
+
+	<!-- 删除缴费类型记录 -->
+	<delete id="deleteYuyueType02" parameterType="int">
+		delete from t_yuyueType  ${where}
+	</delete>
+
+	<!-- 删除缴费类型记录 -->
+	<delete id="chushihuaYuyueType" parameterType="yuyueType">
+		update t_yuyueType set user_name=#{user_name},state=#{state} where typeId = #{typeId}
+	</delete>
+
+</mapper>
